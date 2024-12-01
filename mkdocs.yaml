@@ -1,8 +1,8 @@
-site_name: pythonpackagetemplate
-site_description: A template for creating python package
+site_name: jaxNR
+site_description: Numerical relativity with JAX
 site_author: Kaze W. K. Wong
-repo_url: https://github.com/kazewong/pythonpackagetemplate
-repo_name: kazewong/packpackagetemplate
+repo_url: https://github.com/kazewong/jaxNR
+repo_name: kazewong/jaxNR
 
 theme:
   name: material

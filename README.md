@@ -1,8 +1,10 @@
-# PythonPackageTemplate
-This is a template I use for creating python packages.
+# JaxNR - Numerical Relativity with JAX
 
-To change adapt this template for your package, here are the steps you should go through
+This is an experimental package (hopefully for my last time) to implement GPU accelerated numerical relativity simulations.
+Here is a list of features that I would like to implement:
 
-- [ ] Change the project name in pyproject.toml
-- [ ] Change the folder packagename to the name of your pacakge
-- [ ]
+- [] Fixed topology FEM methods
+- [] Scaling to multiple GPU nodes
+- [] Automatic differentiation
+- [] Machine learning controller
+
