@@ -2,8 +2,8 @@ import jax
 import jax.numpy as jnp
 from jaxtyping import Array, Float, PyTree, Int
 
-class BBH_BSSN:
 
+class BBH_BSSN:
     """
     A class for the simulation of binary black hole spacetime using the BSSN formalism.
 
@@ -23,14 +23,9 @@ class BBH_BSSN:
     distance: Float
 
     N_grid: Int
-    field: dict[str,Float[Array, " N_grid N_grid N_grid"]]
+    field: dict[str, Float[Array, " N_grid N_grid N_grid"]]
 
-    def __init__(self,
-        mass1: Float,
-        mass2: Float,
-        distance: Float,
-        N_grid: Int
-    ):
+    def __init__(self, mass1: Float, mass2: Float, distance: Float, N_grid: Int):
         self.mass1 = mass1
         self.mass2 = mass2
         self.distance = distance
@@ -39,33 +34,46 @@ class BBH_BSSN:
         self.field = self.generate_initial_condition(mass1, mass2, distance, N_grid)
         self.keys = [
             "alpha",
-            "beta1", "beta2", "beta3",
-            "B1", "B2", "B3",
+            "beta1",
+            "beta2",
+            "beta3",
+            "B1",
+            "B2",
+            "B3",
             "chi",
-            "Gamma1", "Gamma2", "Gamma3",
+            "Gamma1",
+            "Gamma2",
+            "Gamma3",
             "K",
-            "gamma11", "gamma12", "gamma13", "gamma22", "gamma23", "gamma33",
-            "A11", "A12", "A13", "A22", "A23", "A33"
+            "gamma11",
+            "gamma12",
+            "gamma13",
+            "gamma22",
+            "gamma23",
+            "gamma33",
+            "A11",
+            "A12",
+            "A13",
+            "A22",
+            "A23",
+            "A33",
         ]
 
-
     def generate_initial_condition(
-        self,
-        mass1: Float,
-        mass2: Float,
-        distance: Float,
-        N_grid: Int
+        self, mass1: Float, mass2: Float, distance: Float, N_grid: Int
     ) -> dict[str, Float[Array, " N_grid N_grid N_grid"]]:
-        grid_coord = jnp.array(jnp.meshgrid(
-            jnp.linspace(-1, 1, N_grid),
-            jnp.linspace(-1, 1, N_grid),
-            jnp.linspace(-1, 1, N_grid)
-        ))
-        BH1_location = jnp.array([0, 0, -distance/2])
-        BH2_location = jnp.array([0, 0, distance/2])
+        grid_coord = jnp.array(
+            jnp.meshgrid(
+                jnp.linspace(-1, 1, N_grid),
+                jnp.linspace(-1, 1, N_grid),
+                jnp.linspace(-1, 1, N_grid),
+            )
+        )
+        BH1_location = jnp.array([0, 0, -distance / 2])
+        BH2_location = jnp.array([0, 0, distance / 2])
         r1 = jnp.linalg.norm(grid_coord - BH1_location[:, None, None, None], axis=0)
         r2 = jnp.linalg.norm(grid_coord - BH2_location[:, None, None, None], axis=0)
-        chi = (1 + mass1/2/r1 + mass2/2/r2)**(-1./4)
+        chi = (1 + mass1 / 2 / r1 + mass2 / 2 / r2) ** (-1.0 / 4)
         field = {}
         field["chi"] = chi
         field["alpha"] = chi
@@ -82,9 +90,18 @@ class BBH_BSSN:
         pass
 
     @staticmethod
-    def computer_rhs(field: Float[Array, " 24 N_grid N_grid N_grid"]) -> Float[Array, " 24 N_grid N_grid N_grid"]:
-        result = jnp.zeros_like(field)
-        result = result.at[0].set(-
+    def computer_rhs(
+        field: dict[str, Float[Array, " N_grid N_grid N_grid"]],
+        mu: Float = 1.0,
+        eta: Float = 1.0,
+    ) -> dict[str, Float[Array, " N_grid N_grid N_grid"]]:
+        result = {}
+        result["alpha"] = (
+            -field["alpha"] * field["K"]
+        )  # + field['beta1'] * d_alpha_x + field['beta2'] * d_alpha_y + field['beta3'] * d_alpha_z
+        result["beta1"] = field["B1"]
+        result["beta2"] = field["B2"]
+        result["beta3"] = field["B3"]
 
     def forward_step():
         pass
