@@ -6,12 +6,14 @@ from abc import ABC, abstractmethod
 
 @dataclass
 class Cell(ABC):
-    pass
+    coordinates: Float[Array, " n_dim"]
+    values: dict[str, Float[Array, " n_dim"]]
 
 @dataclass
 class Grid(ABC):
     n_dim: int
     data: PyTree[Cell]
+
 
 @dataclass
 class StaticGrid(Grid):
