@@ -23,7 +23,7 @@ class BBH_BSSN:
     distance: Float
 
     N_grid: Int
-    field: Float[Array, " 24 N_grid N_grid N_grid"]
+    field: dict[str,Float[Array, " N_grid N_grid N_grid"]]
 
     def __init__(self,
         mass1: Float,
@@ -37,15 +37,25 @@ class BBH_BSSN:
         self.N_grid = N_grid
 
         self.field = self.generate_initial_condition(mass1, mass2, distance, N_grid)
+        self.keys = [
+            "alpha",
+            "beta1", "beta2", "beta3",
+            "B1", "B2", "B3",
+            "chi",
+            "Gamma1", "Gamma2", "Gamma3",
+            "K",
+            "gamma11", "gamma12", "gamma13", "gamma22", "gamma23", "gamma33",
+            "A11", "A12", "A13", "A22", "A23", "A33"
+        ]
 
 
-    @staticmethod
     def generate_initial_condition(
+        self,
         mass1: Float,
         mass2: Float,
         distance: Float,
         N_grid: Int
-    ) -> Float[Array, " 24 N_grid N_grid N_grid"]:
+    ) -> dict[str, Float[Array, " N_grid N_grid N_grid"]]:
         grid_coord = jnp.array(jnp.meshgrid(
             jnp.linspace(-1, 1, N_grid),
             jnp.linspace(-1, 1, N_grid),
@@ -56,19 +66,25 @@ class BBH_BSSN:
         r1 = jnp.linalg.norm(grid_coord - BH1_location[:, None, None, None], axis=0)
         r2 = jnp.linalg.norm(grid_coord - BH2_location[:, None, None, None], axis=0)
         chi = (1 + mass1/2/r1 + mass2/2/r2)**(-1./4)
-        field = jnp.zeros((24, N_grid, N_grid, N_grid))
-        field = field.at[0].set(chi)
-        field = field.at[7].set(chi)
-        field = field.at[12].set(jnp.ones((N_grid, N_grid, N_grid)))
-        field = field.at[15].set(jnp.ones((N_grid, N_grid, N_grid)))
-        field = field.at[17].set(jnp.ones((N_grid, N_grid, N_grid)))
+        field = {}
+        field["chi"] = chi
+        field["alpha"] = chi
+        field["gamma11"] = jnp.ones((N_grid, N_grid, N_grid))
+        field["gamma22"] = jnp.ones((N_grid, N_grid, N_grid))
+        field["gamma33"] = jnp.ones((N_grid, N_grid, N_grid))
+        for key in self.keys:
+            if key not in field:
+                field[key] = jnp.zeros((N_grid, N_grid, N_grid))
+
         return field
 
     def compute_derivatives():
         pass
 
-    def computer_rhs():
-        pass
+    @staticmethod
+    def computer_rhs(field: Float[Array, " 24 N_grid N_grid N_grid"]) -> Float[Array, " 24 N_grid N_grid N_grid"]:
+        result = jnp.zeros_like(field)
+        result = result.at[0].set(-
 
     def forward_step():
         pass
