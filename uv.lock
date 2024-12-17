@@ -483,6 +483,7 @@ name = "jaxnr"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
+    { name = "ipython" },
     { name = "jax", extra = ["cuda12"] },
     { name = "jaxtyping" },
     { name = "pre-commit" },
@@ -504,6 +505,7 @@ docs = [
 
 [package.metadata]
 requires-dist = [
+    { name = "ipython", specifier = ">=8.29.0" },
     { name = "jax", extras = ["cuda12"], specifier = ">=0.4.35" },
     { name = "jaxtyping", specifier = ">=0.2.36" },
     { name = "mkdocs", marker = "extra == 'docs'", specifier = "==1.6.1" },

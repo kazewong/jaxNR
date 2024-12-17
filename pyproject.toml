@@ -5,6 +5,7 @@ description = "Numerical relativity simulation in Jax"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "ipython>=8.29.0",
     "jax[cuda12]>=0.4.35",
     "jaxtyping>=0.2.36",
     "pre-commit>=4.0.1",
